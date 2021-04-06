@@ -21,11 +21,13 @@ cecho ()                     # Color-echo.
 }
 
 # collect terraform outputs for keys & iot hub name
-IOT_HUB_NAME=$(terraform output iothub_name)
+# IOT_HUB_NAME=$(terraform output iothub_name)
 # Read .json file
 
-for device in $(jq .things.thingName sample_aws.json)
+for device in $(jq .things sample_aws.json)
 do
     cecho device $green
-    az iot hub device-identity create --device-id [device id] --hub-name $IOT_HUB_NAME
+    # az iot hub device-identity create --device-id [device id] --hub-name $IOT_HUB_NAME
 done
+
+jq '.things | .thingName' sample_aws.json | echo
