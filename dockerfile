@@ -98,5 +98,5 @@ RUN chmod -x -R /app/*
 #       START SECTION 7              #
 #       RUN COMMAND                  #
 ######################################
-WORKDIR /app/STREAM_1
-CMD ["/bin/bash", "/app/STREAM_1/az_deploy.sh"]
+WORKDIR /app/STREAM_1/device_registration
+CMD ["/bin/bash", "/app/STREAM_1/device_registration/register_devices.sh"]
