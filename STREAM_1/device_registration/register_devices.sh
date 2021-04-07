@@ -21,13 +21,20 @@ cecho ()                     # Color-echo.
 }
 
 # collect terraform outputs for keys & iot hub name
-# IOT_HUB_NAME=$(terraform output iothub_name)
+source /mnt/env.sh
+cecho $IOT_HUB_NAME $cyan
+cecho $DAVID_VAR $cyan
+
 # Read .json file
 
-for device in $(jq .things sample_aws.json)
-do
-    cecho device $green
-    # az iot hub device-identity create --device-id [device id] --hub-name $IOT_HUB_NAME
+jq -rc '.things[]' ../device_registration/sample_aws.json | while IFS='' read thing;do
+    name=$(echo "$thing" | jq .thingName)
+    name="${name%\"}"
+    name="${name#\"}"
+    arn=$(echo "$thing" | jq .thingArn)
+    cecho "$name" $magenta
+    cecho "$arn" $magenta
+    az iot hub device-identity create --device-id $name --hub-name $IOT_HUB_NAME
 done
 
-jq '.things | .thingName' sample_aws.json | echo
+cecho "Registered All Devices in File" $green

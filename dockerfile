@@ -27,6 +27,13 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 
 ######################################
+#      START SECTION                 #
+#      INSTALL AZ CLI EXTENSIONS     #
+#                                    #
+######################################
+RUN az extension add --name azure-iot -y
+
+######################################
 #       START SECTION 2              #
 #       INSTALL AZURE FUNCTION       #
 #       CORE TOOLS                   #
@@ -98,5 +105,5 @@ RUN chmod -x -R /app/*
 #       START SECTION 7              #
 #       RUN COMMAND                  #
 ######################################
-WORKDIR /app/STREAM_1/device_registration
-CMD ["/bin/bash", "/app/STREAM_1/device_registration/register_devices.sh"]
+WORKDIR /app/STREAM_1
+CMD ["/bin/bash", "/app/STREAM_1/az_deploy.sh"]
