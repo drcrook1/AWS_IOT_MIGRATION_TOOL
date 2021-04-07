@@ -10,8 +10,7 @@ async def main():
 
     # Fetch the connection string from an enviornment variable
     conn_str = os.getenv("IOTHUB_DEVICE_CONNECTION_STRING")
- #   conn_str = "HostName=johnbakairlift.azure-devices.net;DeviceId=JBThing1;SharedAccessKey=jgQ94w6mjFWioNNBj1TG4aKx4pCZypwvyy4sFstuHjk="
-
+ 
     # Create instance of the device client using the authentication provider
     device_client = IoTHubDeviceClient.create_from_connection_string(conn_str)
 
