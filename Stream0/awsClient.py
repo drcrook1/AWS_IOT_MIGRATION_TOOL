@@ -194,6 +194,7 @@ def job_thread_fn(job_id, job_document):
         print ("Job Operation: " + jsonJobDoc['operation'])
         download_files_from_s3(jsonJobDoc['fileBucket'], jsonJobDoc['ACCESS_KEY'], jsonJobDoc['SECRET_KEY'])
 
+        #DO THIS LAST SINCE THE BOOTLOADER COULD KILL US ANYTIME AFTER THIS FILE IS CREATED
         print("Creating local file.")
         f = open("upgrade_device.txt", "a")
         f.write ("AWS job run to upgrade firmware")
