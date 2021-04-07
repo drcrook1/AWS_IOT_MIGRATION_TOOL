@@ -365,7 +365,7 @@ if __name__ == '__main__':
         print ("Sending message(s)")
 
         while (True) :
-            message = "{\"devID\":\""+ args.client_id +"\",\"temperature\":" + str(randint(50,100)) + ",\"humidity\":" + str(randint(10,99))+"}"
+            message = "{\",\"temperature\":" + str(randint(50,100)) + ",\"humidity\":" + str(randint(10,99))+"}"
             print("Publishing message to topic '{}': {}".format("test/topic", message))
             mqtt_connection.publish(
                 topic="test/topic",
