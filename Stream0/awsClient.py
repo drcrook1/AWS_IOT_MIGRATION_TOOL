@@ -58,6 +58,7 @@ parser.add_argument('--verbosity', choices=[x.name for x in io.LogLevel], defaul
 
 # Using globals to simplify sample code
 is_sample_done = threading.Event()
+global was_upgrade_called 
 
 mqtt_connection = None
 jobs_client = None
@@ -169,6 +170,11 @@ def on_start_next_pending_job_execution_accepted(response):
                 target=lambda: job_thread_fn(execution.job_id, execution.job_document),
                 name='job_thread')
             job_thread.start()
+            print ("setting was upgrade called to true")
+            was_upgrade_called = True
+            print ("was upgrade in job proceedure = " + str(was_upgrade_called))
+
+
         else:
             print("Request to start next job was accepted, but there are no jobs to be done. Waiting for further jobs...")
             done_working_on_job()
@@ -186,7 +192,7 @@ def job_thread_fn(job_id, job_document):
         print("Starting local work on job...")
 
         print("Creating local file.")
-        f = open("upgradedevice.txt", "a")
+        f = open("upgrade_device.txt", "a")
         f.write ("AWS job run to upgrade firmware")
         f.close()
 
@@ -202,7 +208,8 @@ def job_thread_fn(job_id, job_document):
         publish_future.add_done_callback(on_publish_update_job_execution)
 
         print("Exiting this client....")
-        exit (1)
+        was_upgrade_called = True
+        exit (0)
 
     except Exception as e:
         exit(e)
@@ -234,6 +241,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     thing_name = args.thing_name
     io.init_logging(getattr(io.LogLevel, args.verbosity), 'stderr')
+    was_upgrade_called = False
 
     # Spin up resources
     event_loop_group = io.EventLoopGroup(1)
@@ -344,9 +352,8 @@ if __name__ == '__main__':
 
         print ("Sending message(s)")
 
-        publish_count = 1
-        while (publish_count <= 100) :
-            temperature = 80-publish_count
+        while (was_upgrade_called == False) :
+            print ("was upgrade = " + str(was_upgrade_called))
             message = "{\"devID\":\""+ args.client_id +"\",\"temperature\":" + str(randint(50,100)) + ",\"humidity\":" + str(randint(10,99))+"}"
             print("Publishing message to topic '{}': {}".format("test/topic", message))
             mqtt_connection.publish(
@@ -354,12 +361,12 @@ if __name__ == '__main__':
                 payload=message,
                 qos=mqtt.QoS.AT_LEAST_ONCE)
             time.sleep(10)
-            publish_count += 1
-
 
     except Exception as e:
         exit(e)
 
+    print ("Trying to exit...")
+    exit(0)
 
     # Wait for the sample to finish
     is_sample_done.wait()
