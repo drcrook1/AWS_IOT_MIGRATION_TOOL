@@ -7,7 +7,7 @@ FROM ubuntu:20.04
 RUN apt-get clean -y
 RUN apt-get update -y
 RUN apt-get upgrade -y
-RUN apt-get install wget gnupg curl unzip jq apt-transport-https dos2unix nano zip -y
+RUN apt-get install wget gnupg curl unzip jq apt-transport-https dos2unix nano zip python3 python3-pip -y
 
 ######################################
 #       START SECTION 1              #
@@ -48,9 +48,9 @@ RUN apt-get install azure-functions-core-tools-3 -y
 #       INSTALL .NET CORE            #
 #       SDK                          #
 ######################################
-RUN apt-get install dotnet-sdk-3.1 -y
-RUN dotnet tool install --global dotnet-ef --version 3.1.8
-RUN dotnet tool restore
+# RUN apt-get install -y dotnet-sdk-3.1
+# RUN dotnet tool install --global dotnet-ef --version 3.1.8
+# RUN dotnet tool restore
 
 ######################################
 #       START SECTION                #
@@ -102,8 +102,16 @@ RUN find /app/deploy -type f -print0 | xargs -0 -n 1 -P 4 dos2unix
 RUN chmod -x -R /app/*
 
 ######################################
+#                                    #
+#      INSTALL APP DEPENDENCIES      #
+#                                    #
+######################################
+RUN pip3 install -r /app/Stream0/aws_env_reader/requirements.txt
+
+
+######################################
 #       START SECTION 7              #
 #       RUN COMMAND                  #
 ######################################
-WORKDIR /app/STREAM_1
-CMD ["/bin/bash", "/app/STREAM_1/az_deploy.sh"]
+WORKDIR /app/
+CMD ["/bin/bash", "/app/migration_executor.sh"]

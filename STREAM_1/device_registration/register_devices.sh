@@ -27,7 +27,7 @@ cecho $DAVID_VAR $cyan
 
 # Read .json file
 
-jq -rc '.things[]' ../device_registration/sample_aws.json | while IFS='' read thing;do
+jq -rc '.things[]' /mnt/list-things-values.json | while IFS='' read thing;do
     name=$(echo "$thing" | jq .thingName)
     name="${name%\"}"
     name="${name#\"}"
