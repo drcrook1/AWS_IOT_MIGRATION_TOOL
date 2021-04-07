@@ -3,6 +3,9 @@
 
 import argparse
 from random import randint 
+from boto3.session import Session
+import boto3
+import json
 from awscrt import auth, http, io, mqtt
 from awsiot import iotjobs
 from awsiot import mqtt_connection_builder
@@ -58,7 +61,6 @@ parser.add_argument('--verbosity', choices=[x.name for x in io.LogLevel], defaul
 
 # Using globals to simplify sample code
 is_sample_done = threading.Event()
-global was_upgrade_called 
 
 mqtt_connection = None
 jobs_client = None
@@ -170,10 +172,6 @@ def on_start_next_pending_job_execution_accepted(response):
                 target=lambda: job_thread_fn(execution.job_id, execution.job_document),
                 name='job_thread')
             job_thread.start()
-            print ("setting was upgrade called to true")
-            was_upgrade_called = True
-            print ("was upgrade in job proceedure = " + str(was_upgrade_called))
-
 
         else:
             print("Request to start next job was accepted, but there are no jobs to be done. Waiting for further jobs...")
@@ -191,12 +189,16 @@ def job_thread_fn(job_id, job_document):
     try:
         print("Starting local work on job...")
 
+        #download the new client files
+        jsonJobDoc = json.loads(str(job_document).replace("'", "\""))
+        print ("Job Operation: " + jsonJobDoc['operation'])
+        download_files_from_s3(jsonJobDoc['fileBucket'], jsonJobDoc['ACCESS_KEY'], jsonJobDoc['SECRET_KEY'])
+
         print("Creating local file.")
         f = open("upgrade_device.txt", "a")
         f.write ("AWS job run to upgrade firmware")
         f.close()
 
-        #time.sleep(args.job_time)
         print("Done working on job.")
 
         print("Publishing request to update job status to SUCCEEDED...")
@@ -206,10 +208,6 @@ def job_thread_fn(job_id, job_document):
             status=iotjobs.JobStatus.SUCCEEDED)
         publish_future = jobs_client.publish_update_job_execution(request, mqtt.QoS.AT_LEAST_ONCE)
         publish_future.add_done_callback(on_publish_update_job_execution)
-
-        print("Exiting this client....")
-        was_upgrade_called = True
-        exit (0)
 
     except Exception as e:
         exit(e)
@@ -236,12 +234,25 @@ def on_update_job_execution_rejected(rejected):
     exit("Request to update job status was rejected. code:'{}' message:'{}'.".format(
         rejected.code, rejected.message))
 
+def download_files_from_s3(bucketname, ACCESS_KEY, SECRET_KEY):
+    try:
+
+        session = Session(aws_access_key_id=ACCESS_KEY,
+                    aws_secret_access_key=SECRET_KEY)
+        s3 = session.resource('s3')
+        your_bucket = s3.Bucket(bucketname)
+
+        for s3_file in your_bucket.objects.all():
+            your_bucket.download_file(s3_file.key,'./' + s3_file.key)
+    except Exception as e:
+        exit(e)
+
+
 if __name__ == '__main__':
     # Process input args
     args = parser.parse_args()
     thing_name = args.thing_name
     io.init_logging(getattr(io.LogLevel, args.verbosity), 'stderr')
-    was_upgrade_called = False
 
     # Spin up resources
     event_loop_group = io.EventLoopGroup(1)
@@ -352,8 +363,7 @@ if __name__ == '__main__':
 
         print ("Sending message(s)")
 
-        while (was_upgrade_called == False) :
-            print ("was upgrade = " + str(was_upgrade_called))
+        while (True) :
             message = "{\"devID\":\""+ args.client_id +"\",\"temperature\":" + str(randint(50,100)) + ",\"humidity\":" + str(randint(10,99))+"}"
             print("Publishing message to topic '{}': {}".format("test/topic", message))
             mqtt_connection.publish(
@@ -364,9 +374,6 @@ if __name__ == '__main__':
 
     except Exception as e:
         exit(e)
-
-    print ("Trying to exit...")
-    exit(0)
 
     # Wait for the sample to finish
     is_sample_done.wait()
