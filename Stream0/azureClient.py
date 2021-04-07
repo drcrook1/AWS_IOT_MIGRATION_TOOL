@@ -30,7 +30,7 @@ async def main():
     print("Message successfully sent!")
 
     while (True) :
-        message = "{\"devID\":\" JBThing1 \",\"temperature\":" + str(randint(50,100)) + ",\"humidity\":" + str(randint(10,99))+"}"
+        message = "{\"temperature\":" + str(randint(50,100)) + ",\"humidity\":" + str(randint(10,99))+"}"
         print("Sending Message: " + message)
         await device_client.send_message(message)
         time.sleep(10)
