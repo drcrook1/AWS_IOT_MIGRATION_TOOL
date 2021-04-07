@@ -1,6 +1,6 @@
 {
   "operation": "upgradetoAzure",
-  "fileBucket": "jbiotbucket",
-  "ACCESS_KEY": "AKIA3AGJDU56VEUCIW3M",
-  "SECRET_KEY": "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"
+  "fileBucket": "s3bucketgoeshere",
+  "ACCESS_KEY": "s3accesskeygoeshere",
+  "SECRET_KEY": "s3secretkeygoeshere"
 }
