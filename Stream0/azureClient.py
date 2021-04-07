@@ -1,3 +1,4 @@
+import argparse
 from random import randint 
 import time
 import os
@@ -5,11 +6,16 @@ import asyncio
 from azure.iot.device.aio import IoTHubDeviceClient
 
 
+parser = argparse.ArgumentParser(description="Jobs sample runs all pending job executions.")
+parser.add_argument('--connectionstring', required=True, help="You must include a deviceconnectionstring. ")
+
 async def main():
+    args = parser.parse_args()
+
     print("Starting Azure Device...")
 
     # Fetch the connection string from an enviornment variable
-    conn_str = os.getenv("IOTHUB_DEVICE_CONNECTION_STRING")
+    conn_str = args.connectionstring 
  
     # Create instance of the device client using the authentication provider
     device_client = IoTHubDeviceClient.create_from_connection_string(conn_str)
