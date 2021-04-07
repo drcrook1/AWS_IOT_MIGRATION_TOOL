@@ -5,6 +5,7 @@
 .key
 .crt
 *.crt
+*.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

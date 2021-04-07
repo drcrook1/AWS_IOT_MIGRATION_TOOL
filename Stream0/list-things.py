@@ -21,7 +21,7 @@ if __name__ == '__main__':
     response = client.list_things()
     j = json.loads(str(response).replace("\'", "\""))
 
-    f = open("list-things-values.json", "w")
+    f = open("/mnt/list-things-values.json", "w")
     f.write(json.dumps(j, sort_keys=True, indent=4))
     f.close()
     print(json.dumps(j, sort_keys=True, indent=4))
