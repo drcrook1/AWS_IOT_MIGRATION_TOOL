@@ -2,7 +2,9 @@
 {
     If (Test-Path -Path .\upgrade_device.txt) 
     {
-       start python azureClient.py 
+       Stop-Process -Name python -Force -ErrorAction SilentlyContinue
+       Start-Sleep -Seconds 2 #give python time to die before starting a new one
+       start python azureClient.py
        #start ./go.bat
         exit
     }
