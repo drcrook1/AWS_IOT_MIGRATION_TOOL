@@ -20,13 +20,20 @@ cecho ()                     # Color-echo.
   return
 }
 
-cecho "Please log in to azure with your credentials"
+cecho "Please log in to azure with your credentials" $blue
 az login
 
+cecho "Analyzing AWS IoT Environment..." $blue
 cd Stream0/aws_env_reader
+cecho "mapping registered things..." $cyan
 python3 list-things.py
+cecho "mapping policies..." $cyan
+python3 list-policies.py
 cd /app
 
+cecho "Building Azure IoT Environment..." $blue
 cd STREAM_1
 /bin/bash az_deploy.sh
 cd /app
+
+cecho "Upgrading All Devices Firmware to Azure..." $blue
