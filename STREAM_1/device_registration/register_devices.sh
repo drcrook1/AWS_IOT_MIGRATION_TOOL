@@ -22,8 +22,8 @@ cecho ()                     # Color-echo.
 
 # collect terraform outputs for keys & iot hub name
 source /mnt/env.sh
-cecho $IOT_HUB_NAME $cyan
-cecho $DAVID_VAR $cyan
+# cecho $IOT_HUB_NAME $cyan
+# cecho $DAVID_VAR $cyan
 
 # Read .json file
 
@@ -32,9 +32,7 @@ jq -rc '.things[]' /mnt/list-things-values.json | while IFS='' read thing;do
     name="${name%\"}"
     name="${name#\"}"
     arn=$(echo "$thing" | jq .thingArn)
-    cecho "$name" $magenta
-    cecho "$arn" $magenta
+    # cecho "$name" $magenta
+    # cecho "$arn" $magenta
     az iot hub device-identity create --device-id $name --hub-name $IOT_HUB_NAME
 done
-
-cecho "Registered All Devices in File" $green
