@@ -12,7 +12,7 @@ while ($TRUE)
        $args = "azureClient.py --connectionstring "+ $connectionstring
        Start-Process -FilePath python -ArgumentList $args
        #start ./go.bat
-        exit
+       exit
     }
     Else
     {

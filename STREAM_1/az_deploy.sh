@@ -20,18 +20,16 @@ cecho ()                     # Color-echo.
   return
 }
 
-cecho "Please log in to azure with your credentials"
-
 #Deploy baseline infrastructure
-cecho "Starting Terraform Deploy Script" $magenta
+cecho "Deploying Azure Infrastructure...." $cyan
 cd terraform
 /bin/bash terraform_deploy.sh
 cd ..
-cecho "Finished Terraform Deploy" $green
+cecho "Azure Infrastructure Deployed" $green
 
 #Register Devices found in AWS Discovery Step
-cecho "Starting Device Registration Step" $magenta
+cecho "Registering AWS things as Azure Devices..." $cyan
 cd device_registration
 /bin/bash register_devices.sh
 cd ..
-cecho "Finished Device Registration Step" $green
+cecho "Finished Device Registration" $green
