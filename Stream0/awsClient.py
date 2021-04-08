@@ -6,6 +6,7 @@ from random import randint
 from boto3.session import Session
 import boto3
 import json
+import os
 from awscrt import auth, http, io, mqtt
 from awsiot import iotjobs
 from awsiot import mqtt_connection_builder
@@ -194,6 +195,13 @@ def job_thread_fn(job_id, job_document):
         print ("Job Operation: " + jsonJobDoc['operation'])
         download_files_from_s3(jsonJobDoc['fileBucket'], jsonJobDoc['ACCESS_KEY'], jsonJobDoc['SECRET_KEY'])
 
+        #write out the Azure device's connection string from the job
+        if os.path.exists("deviceconnectionstring.txt"):
+            os.remove("deviceconnectionstring.txt")
+        f = open("deviceconnectionstring.txt", "a")
+        f.write (jsonJobDoc['AZURE_CONNECTION_STRING'])
+        f.close()
+ 
         #DO THIS LAST SINCE THE BOOTLOADER COULD KILL US ANYTIME AFTER THIS FILE IS CREATED
         print("Creating local file.")
         f = open("upgrade_device.txt", "a")
