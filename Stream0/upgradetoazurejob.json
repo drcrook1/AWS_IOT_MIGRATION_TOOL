@@ -1,6 +1,0 @@
-{
-  "operation": "upgradetoAzure",
-  "fileBucket": "s3bucketgoeshere",
-  "ACCESS_KEY": "s3accesskeygoeshere",
-  "SECRET_KEY": "s3secretkeygoeshere"
-}
