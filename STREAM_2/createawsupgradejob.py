@@ -4,12 +4,10 @@ import json
 from uuid import uuid4
 import os
 
-parser = argparse.ArgumentParser(description="Create an AWS job to migrate an IoT Thing to Azure")
-parser.add_argument('--s3bucket', required=True, help="Bucket with azure code. ")
-parser.add_argument('--s3bucket-key-id', required=True, help="Bucket key ID. ")
-parser.add_argument('--s3bucket-key', required=True, help="Bucket key. ")
-parser.add_argument('--jsontoprocess', required=True, help="aws-things-azure-processed file")
-args = parser.parse_args()
+S3_BUCKET = os.environ["S3_BUCKET"]
+S3_BUCKET_KEY_ID = os.environ["S3_BUCKET_KEY_ID"]
+S3_BUCKET_KEY = os.environ["S3_BUCKET_KEY"]
+AZ_PROCESSED_FILE = "/mnt/aws-things-azure-processed.json"
 
 if __name__ == '__main__':
 
@@ -20,7 +18,7 @@ if __name__ == '__main__':
         aws_secret_access_key=os.environ["AWS_KEY"]
     )
 
-    with open (args.jsontoprocess) as file:
+    with open (AZ_PROCESSED_FILE) as file:
         jsonJobDoc = json.load(file)
     
     for thing in jsonJobDoc['things']:
@@ -33,7 +31,7 @@ if __name__ == '__main__':
             targets=[
                 thing['thingArn'],
             ],
-            document="{ \"operation\": \"upgradetoAzure\", \"fileBucket\": \""+args.s3bucket+"\", \"ACCESS_KEY\": \""+args.s3bucket_key_id + "\",\"SECRET_KEY\": \""+args.s3bucket_key + "\", \"AZURE_CONNECTION_STRING\": \""+thing['azure']['iotconnstr'] + "\" }",
+            document="{ \"operation\": \"upgradetoAzure\", \"fileBucket\": \""+S3_BUCKET+"\", \"ACCESS_KEY\": \""+S3_BUCKET_KEY_ID+ "\",\"SECRET_KEY\": \""+S3_BUCKET_KEY+ "\", \"AZURE_CONNECTION_STRING\": \""+thing['azure']['iotconnstr'] + "\" }",
             jobExecutionsRolloutConfig={
                 'maximumPerMinute': 5,
                 'exponentialRate': {

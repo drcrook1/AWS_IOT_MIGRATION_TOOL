@@ -20,6 +20,10 @@ cecho ()                     # Color-echo.
   return
 }
 
+cd STREAM_1/device_registration
+/bin/bash register_devices.sh
+
+
 cecho "Please log in to azure with your credentials" $blue
 az login
 
@@ -37,3 +41,8 @@ cd STREAM_1
 cd /app
 
 cecho "Upgrading All Devices Firmware to Azure..." $blue
+cd STREAM_2
+python3 createawsupgradejob.py
+cd /app
+
+cecho "Theoretically you succeeded..." $green

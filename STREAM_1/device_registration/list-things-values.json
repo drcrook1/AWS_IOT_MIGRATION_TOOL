@@ -1,0 +1,44 @@
+{
+    "ResponseMetadata": {
+        "RequestId": "55c7b359-1983-4090-a216-47e65c388bd5",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "date": "Tue, 06 Apr 2021 20:59:55 GMT",
+            "content-type": "application/json",
+            "content-length": "515",
+            "connection": "keep-alive",
+            "x-amzn-requestid": "55c7b359-1983-4090-a216-47e65c388bd5",
+            "access-control-allow-origin": "*",
+            "x-amz-apigw-id": "dYTHzG56vHcFQgA=",
+            "x-amzn-trace-id": "Root=1-606ccbcb-66e146401fb5ddf26d253f2b"
+        },
+        "RetryAttempts": 0
+    },
+    "things": [
+        {
+            "thingName": "JBThing1",
+            "thingArn": "arn:aws:iot:us-west-2:756336011133:thing/JBThing1",
+            "attributes": {
+                "org": "FTA",
+                "user": "johbake"
+            },
+            "version": 2
+        },
+        {
+            "thingName": "kalam-dev2",
+            "thingTypeName": "monitors",
+            "thingArn": "arn:aws:iot:us-west-2:756336011133:thing/kalam-dev2",
+            "attributes": {
+                "model": "456",
+                "temperature": "38"
+            },
+            "version": 3
+        },
+        {
+            "thingName": "kalam-dev1",
+            "thingArn": "arn:aws:iot:us-west-2:756336011133:thing/kalam-dev1",
+            "attributes": {},
+            "version": 1
+        }
+    ]
+}

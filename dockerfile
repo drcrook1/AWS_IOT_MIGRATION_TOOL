@@ -107,6 +107,7 @@ RUN chmod -x -R /app/*
 #                                    #
 ######################################
 RUN pip3 install -r /app/Stream0/aws_env_reader/requirements.txt
+RUN pip3 install -r /app/STREAM_2/requirements.txt
 
 
 ######################################
