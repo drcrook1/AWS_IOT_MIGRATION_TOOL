@@ -9,10 +9,10 @@ while ($TRUE)
        Start-Sleep -Seconds 2 #give python time to die before starting a new one
        
        $connectionstring = Get-Content -Path '.\deviceconnectionstring.txt'
-       $args = "azureClient.py --connectionstring "+ $connectionstring
-       Start-Process -FilePath python3 -ArgumentList $args
-       #start ./go.bat
-       while ($TRUE)
+       $arguments = "azureClient.py --connectionstring "+ $connectionstring
+       Start-Process -FilePath python3 -ArgumentList $arguments
+
+       while ($TRUE) #loop indefinately, even though our job is done, or else the container stops
        {
         Start-Sleep -Seconds 60
        }
