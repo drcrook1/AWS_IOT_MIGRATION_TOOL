@@ -4,6 +4,9 @@
 ######################################
 FROM ubuntu:20.04
 
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=America/New_York
+
 RUN apt-get clean -y
 RUN apt-get update -y
 RUN apt-get upgrade -y
@@ -48,9 +51,9 @@ RUN apt-get install azure-functions-core-tools-3 -y
 #       INSTALL .NET CORE            #
 #       SDK                          #
 ######################################
-# RUN apt-get install -y dotnet-sdk-3.1
-# RUN dotnet tool install --global dotnet-ef --version 3.1.8
-# RUN dotnet tool restore
+RUN apt-get install -y dotnet-sdk-3.1
+RUN dotnet tool install --global dotnet-ef --version 3.1.8
+RUN dotnet tool restore
 
 ######################################
 #       START SECTION                #
