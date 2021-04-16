@@ -20,10 +20,6 @@ cecho ()                     # Color-echo.
   return
 }
 
-cd STREAM_1/device_registration
-/bin/bash register_devices.sh
-
-
 cecho "Please log in to azure with your credentials" $blue
 az login
 
